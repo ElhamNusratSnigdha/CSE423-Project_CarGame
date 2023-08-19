@@ -51,8 +51,8 @@ menu = Menu()
 
 
 CAR_X = 0
-CAR_Y = - 600
-CAR_WIDTH = 40
+CAR_Y =  Y_MIN_GLOBAL + 100
+CAR_WIDTH = 80
 
 GAME_OVER = False
 
@@ -176,7 +176,7 @@ class Race:
 
 
         for i in range(num_rocks):
-            if CAR_Y - CAR_WIDTH <= ROCKS[i].y <= CAR_Y + CAR_WIDTH and CAR_X - CAR_WIDTH <= ROCKS[i].x <= CAR_X + CAR_WIDTH:
+            if CAR_Y <= ROCKS[i].y <= CAR_Y + CAR_WIDTH and CAR_X - CAR_WIDTH <= ROCKS[i].x <= CAR_X + CAR_WIDTH:
                 GAME_OVER = True
         
 
@@ -199,7 +199,7 @@ class Race:
         
         
         glColor3f(0,1,0)
-        Reactangle(CAR_WIDTH*2,CAR_X,CAR_Y/2)
+        Reactangle(CAR_WIDTH,CAR_X,CAR_Y/2)
 
         glPointSize(1)
 
