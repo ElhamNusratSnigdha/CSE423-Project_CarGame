@@ -20,7 +20,6 @@ from pynput.keyboard import Controller
 
 # Globals
 colors = 0, 0, 0
-scale_radius = 0
 
 SCORE = 0
 
@@ -54,7 +53,7 @@ CAR_WIDTH = 40
 GAME_OVER = False
 
 def update():
-    global ROAD_LENGTH, scale_radius, colors, \
+    global ROAD_LENGTH, colors, \
         CAR_Y, \
         CAR_X, \
         SPEED_MULTIPLIER, \
@@ -62,11 +61,8 @@ def update():
 
 
     while True:
-        # Fire
         SPEED_MULTIPLIER += 0.001
       
-
-        scale_radius += 1
         auto_key_press.press(",")
         sleep(0.1)
 
@@ -76,7 +72,6 @@ def update():
         ROAD_LENGTH -= 20
         if ROAD_LENGTH <= -900:
             ROAD_LENGTH = 900
-            scale_radius = 0
 
         colors = 1, 1, 0
         
@@ -154,11 +149,11 @@ class Race:
             GAME_OVER, \
             SCORE
 
-        if key == b"w":
+        if key == b"w" and CAR_Y < Y_MAX_GLOBAL:
             CAR_Y += MOVE_DISPLACEMENT
         if key == b"a" and CAR_X > X_MIN_GLOBAL:
             CAR_X -= MOVE_DISPLACEMENT
-        if key == b"s":
+        if key == b"s" and CAR_Y > Y_MIN_GLOBAL:
             CAR_Y -= MOVE_DISPLACEMENT
         if key == b"d" and CAR_X < X_MAX_GLOBAL:
             CAR_X += MOVE_DISPLACEMENT
