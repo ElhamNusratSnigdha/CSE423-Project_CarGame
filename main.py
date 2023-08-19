@@ -198,8 +198,21 @@ class Race:
         for i in range(num_rocks):  self.create_rock(ROCKS[i])
         
         
-        glColor3f(0,1,0)
-        Reactangle(CAR_WIDTH,CAR_X,CAR_Y/2)
+        # Car Design,
+        glColor3f(0, 1, 0)
+        Reactangle(CAR_WIDTH * 2, CAR_X, CAR_Y / 2)
+        # left bottom
+        glColor3f(0, 1, 1)
+        circle.filled_circle(20, CAR_X - 10, CAR_Y + 30)
+        # right bottom
+        glColor3f(0, 1, 1)
+        circle.filled_circle(20, CAR_X + 90, CAR_Y + 30)
+        # left top
+        glColor3f(0, 1, 1)
+        circle.filled_circle(20, CAR_X - 10, CAR_Y + 120)
+        # right top
+        glColor3f(0, 1, 1)
+        circle.filled_circle(20, CAR_X + 90, CAR_Y + 120)
 
         glPointSize(1)
 
