@@ -200,7 +200,7 @@ class Race:
         
         # Car Design,
         glColor3f(0, 1, 0)
-        Reactangle(CAR_WIDTH * 2, CAR_X, CAR_Y / 2)
+        Reactangle(CAR_WIDTH, CAR_X, CAR_Y / 2)
         # left bottom
         glColor3f(0, 1, 1)
         circle.filled_circle(20, CAR_X - 10, CAR_Y + 30)
