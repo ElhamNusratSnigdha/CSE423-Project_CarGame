@@ -17,7 +17,11 @@ from threading import Thread
 from time import sleep
 from pynput.keyboard import Controller
 
+import pygame
 
+pygame.init()
+pygame.mixer.music.load("music.mp3")
+crash_sound = pygame.mixer.Sound("carCrash.mp3")
 # Globals
 colors = 0, 0, 0
 
@@ -140,7 +144,7 @@ class Race:
         glMatrixMode(GL_MODELVIEW)
         glPointSize(self.pixel_size)
         glLoadIdentity()
-
+        pygame.mixer.music.play(-1)
 
     def buttons(self, key, x, y):
         global CAR_Y, \
@@ -213,6 +217,8 @@ class Race:
             glColor3f(0, 0, 1)
             glColor3f(1, 0, 0)
             menu.game_over_text(-650, 0)
+            pygame.mixer.music.pause()
+            pygame.mixer.Sound.play(crash_sound)
 
         glutSwapBuffers()
         glutMainLoop()
