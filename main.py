@@ -23,7 +23,6 @@ colors = 0, 0, 0
 scale_radius = 0
 
 SCORE = 0
-HEALTH = 2
 
 X_MAX_GLOBAL = 700
 X_MIN_GLOBAL = -700
@@ -36,11 +35,6 @@ num_rocks = 7
 for i in range(num_rocks):
     rock = Rock(randint(X_MIN_GLOBAL, X_MAX_GLOBAL), Y_MAX_GLOBAL,randint(10,15), randint(20,50))
     ROCKS.append(rock)
-
-
-
-
-
 
 SPEED_MULTIPLIER = 4
 
@@ -57,26 +51,7 @@ CAR_X = 0
 CAR_Y = - 600
 CAR_WIDTH = 40
 
-
-
-
-
 GAME_OVER = False
-
-
-
-def player_health_system():
-    global CAR_WIDTH, \
-        HEALTH, \
-        GAME_OVER
-
-    CAR_WIDTH += 4
-    HEALTH -= 1
-    if HEALTH <= 0:
-        HEALTH = 0
-        CAR_WIDTH = - 100
-        GAME_OVER = True
-
 
 def update():
     global ROAD_LENGTH, scale_radius, colors, \
@@ -111,7 +86,7 @@ def update():
             if ROCKS[i].y < Y_MIN_GLOBAL:
                 ROCKS[i].y = 900
                 ROCKS[i].x = randint(X_MIN_GLOBAL, X_MAX_GLOBAL)
-        # Re-render the display
+        
         glutPostRedisplay()
 
 
@@ -177,7 +152,6 @@ class Race:
             CAR_X, \
             CAR_WIDTH, \
             GAME_OVER, \
-            HEALTH, \
             SCORE
 
         if key == b"w":
@@ -204,7 +178,7 @@ class Race:
 
         for i in range(num_rocks):
             if CAR_Y - CAR_WIDTH <= ROCKS[i].y <= CAR_Y + CAR_WIDTH and CAR_X - CAR_WIDTH <= ROCKS[i].x <= CAR_X + CAR_WIDTH:
-                player_health_system()
+                GAME_OVER = True
         
 
         glutPostRedisplay()
@@ -215,10 +189,7 @@ class Race:
         glLoadIdentity()
         glColor3f(1, 1, 0)
 
-        # Drawing methods
         self.road()
-      
-        menu.health_text(-1900, 200)
         menu.score_text(950, 200)
 
        
@@ -233,22 +204,16 @@ class Race:
 
         glPointSize(1)
 
-        # Score
-        score_and_health_text = Digits()
+        score_text = Digits()
         digit_position = 900
         glColor3f(colors[0], colors[1], colors[2])
 
         for i in range(10, 50, 4):
-            score_and_health_text.draw_digit(
+            score_text.draw_digit(
                 f"{SCORE}", offset_x=i, offset_y=i, digit_position_x=digit_position)
 
         glColor3f(colors[2], colors[1], colors[0])
-        for i in range(10, 50, 2):
-            score_and_health_text.draw_digit(
-                f"{HEALTH}", digit_position_x=-1920 + i, offset_x=i, offset_y=i)
 
-
-        # Drawing cross marks when the game is over
         if GAME_OVER:
             glColor3f(0, 0, 1)
             glColor3f(1, 0, 0)
@@ -261,7 +226,7 @@ class Race:
         glutMainLoop()
 
     def road(self):
-        left_x1, left_y1 = -700, -900
+        left_x1, left_y1 = X_MIN_GLOBAL, Y_MIN_GLOBAL
         offset = -50
 
         line.midpoint(left_x1 + offset, left_y1, left_x1 + offset, Y_MAX_GLOBAL)

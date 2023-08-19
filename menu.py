@@ -62,15 +62,6 @@ class Menu:
             self.e(adjust=1050, x=i + x, y=i + y)
             self.r(adjust=1200, x=i + x, y=i + y)
 
-    def health_text(self, x=0, y=0):
-        for i in range(10, 40, 1):
-            self.h(adjust=0, x=i + x, y=i + y)
-            self.e(adjust=150, x=i + x, y=i + y)
-            self.a(adjust=300, x=i + x, y=i + y)
-            self.l(adjust=450, x=i + x, y=i + y)
-            self.t(adjust=600, x=i + x, y=i + y)
-            self.h(adjust=750, x=i + x, y=i + y)
-
     def score_text(self, x=0, y=0):
         for i in range(10, 40, 1):
             self.s(adjust=0, x=i + x, y=i + y)
@@ -96,16 +87,13 @@ class Menu:
             line.midpoint(left_x1 + offset + i, left_y1, left_x1 + offset + i + i * 10, 900)
             line.midpoint(-left_x1 - offset - i, left_y1, -left_x1 - offset - i - i * 10, 900)
 
-        score_and_health_text = Digits()
+        score_text = Digits()
         digit_position = 900
         SCORE = 00
-        HEALTH = 00
 
         for i in range(5, 20, 10):
-            score_and_health_text.draw_digit(f"{SCORE}", offset_x=i, offset_y=i, digit_position_x=digit_position)
+            score_text.draw_digit(f"{SCORE}", offset_x=i, offset_y=i, digit_position_x=digit_position)
 
-        for i in range(5, 20, 10):
-            score_and_health_text.draw_digit(f"{HEALTH}", digit_position_x=-1920 + i, offset_x=i, offset_y=i)
 
 
     def a(self, x=0, y=0, adjust=0):
@@ -164,22 +152,6 @@ class Menu:
 
         line.midpoint(x + 80 + adjust, y + 0, x + 10 + adjust, y + 60)  
 
-    def h(self, x=0, y=0, adjust=0):
-        line.midpoint(x + 0 + adjust, y + 0, x + 0 + adjust, y + 70)  
-        line.midpoint(x + 0 + adjust, y + 80, x + 0 + adjust, y + 150)  
-        line.midpoint(x + 80 + adjust, y + 80, x + 80 + adjust, y + 150)  
-        line.midpoint(x + 80 + adjust, y + 0, x + 80 + adjust, y + 70)  
-        line.midpoint(x + 10 + adjust, y + 70, x + 70 + adjust, y + 70)  
-
-    def l(self, x=0, y=0, adjust=0):
-        line.midpoint(x + 0 + adjust, y + 0, x + 0 + adjust, y + 70)  
-        line.midpoint(x + 0 + adjust, y + 80, x + 0 + adjust, y + 150)  
-        line.midpoint(x + 10 + adjust, y + 0, x + 70 + adjust, y + 0)  
-
-    def t(self, x=0, y=0, adjust=0):
-        line.midpoint(x + 0 + adjust, y + 150, x + 80 + adjust, y + 150)  
-        line.midpoint(x + 35 + adjust, y + 0, x + 35 + adjust, y + 70)  
-        line.midpoint(x + 35 + adjust, y + 80, x + 35 + adjust, y + 150)  
 
     def s(self, x=0, y=0, adjust=0):
         line.midpoint(x + 0 + adjust, y + 80, x + 0 + adjust, y + 150)  
