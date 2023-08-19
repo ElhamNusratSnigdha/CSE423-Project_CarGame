@@ -1,16 +1,14 @@
 from circle import MidpointCircle
 from line import MidpointLine
 from digits import Digits
-from rectangle import Reactangle
 from menu import Menu
-
-
+import math
+import numpy as np
 from rock import Rock
 
 from OpenGL.GL import *
 from OpenGL.GLU import *
 from OpenGL.GLUT import *
-
 
 from random import randint
 from threading import Thread
@@ -30,13 +28,13 @@ SCORE = 0
 X_MAX_GLOBAL = 700
 X_MIN_GLOBAL = -700
 Y_MAX_GLOBAL = 900
-Y_MIN_GLOBAL = -900 
+Y_MIN_GLOBAL = -900
 ROAD_LENGTH = 900
 
 ROCKS = []
 num_rocks = 7
 for i in range(num_rocks):
-    rock = Rock(randint(X_MIN_GLOBAL, X_MAX_GLOBAL), Y_MAX_GLOBAL,randint(10,15), randint(20,50))
+    rock = Rock(randint(X_MIN_GLOBAL, X_MAX_GLOBAL), Y_MAX_GLOBAL, randint(10, 15), randint(20, 50))
     ROCKS.append(rock)
 
 SPEED_MULTIPLIER = 4
@@ -49,12 +47,12 @@ line = MidpointLine()
 circle = MidpointCircle()
 menu = Menu()
 
-
 CAR_X = 0
-CAR_Y =  Y_MIN_GLOBAL + 100
+CAR_Y = Y_MIN_GLOBAL + 100
 CAR_WIDTH = 80
 
 GAME_OVER = False
+
 
 def update():
     global ROAD_LENGTH, colors, \
@@ -63,10 +61,9 @@ def update():
         SPEED_MULTIPLIER, \
         GAME_OVER
 
-
     while True:
         SPEED_MULTIPLIER += 0.001
-      
+
         auto_key_press.press(",")
         sleep(0.1)
 
@@ -78,14 +75,13 @@ def update():
             ROAD_LENGTH = 900
 
         colors = 1, 1, 0
-        
 
         for i in range(num_rocks):
             ROCKS[i].y -= ROCKS[i].speed * SPEED_MULTIPLIER
             if ROCKS[i].y < Y_MIN_GLOBAL:
                 ROCKS[i].y = 900
                 ROCKS[i].x = randint(X_MIN_GLOBAL, X_MAX_GLOBAL)
-        
+
         glutPostRedisplay()
 
 
@@ -98,6 +94,7 @@ def score_increment():
         if GAME_OVER:
             break
 
+
 class Race:
     def __init__(self, win_size_x=500, win_size_y=500, win_pos_x=0, win_pos_y=0,
                  pixel_size=1):
@@ -107,7 +104,6 @@ class Race:
         self.win_pos_y = win_pos_y
         self.pixel_size = pixel_size
 
-
         self.player1_radius = 40
         self.player1_move_x = 0
         self.player1_move_y = 0
@@ -116,8 +112,6 @@ class Race:
         self.player2_radius = 20
         self.player_move_x = 0
         self.player_move_y = 0
-
-
 
     def initialize(self):
         glutInit()
@@ -140,7 +134,7 @@ class Race:
         glMatrixMode(GL_PROJECTION)
         glLoadIdentity()
         glOrtho(-self.win_size_x, self.win_size_x, -
-                self.win_size_y, self.win_size_y, 0.0, 1.0)
+        self.win_size_y, self.win_size_y, 0.0, 1.0)
         glMatrixMode(GL_MODELVIEW)
         glPointSize(self.pixel_size)
         glLoadIdentity()
@@ -174,15 +168,12 @@ class Race:
         if CAR_X > self.win_size_x:
             CAR_X = - self.win_size_x
 
-
         for i in range(num_rocks):
             if CAR_Y <= ROCKS[i].y <= CAR_Y + CAR_WIDTH and CAR_X - CAR_WIDTH <= ROCKS[i].x <= CAR_X + CAR_WIDTH:
                 GAME_OVER = True
-        
 
         glutPostRedisplay()
 
-  
     def show_screen(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
@@ -191,28 +182,10 @@ class Race:
         self.road()
         menu.score_text(950, 200)
 
-       
         glColor3f(1, 0, 0)
         glPointSize(1)
-        
+
         for i in range(num_rocks):  self.create_rock(ROCKS[i])
-        
-        
-        # Car Design,
-        glColor3f(0, 1, 0)
-        Reactangle(CAR_WIDTH, CAR_X, CAR_Y / 2)
-        # left bottom
-        glColor3f(0, 1, 1)
-        circle.filled_circle(20, CAR_X - 10, CAR_Y + 30)
-        # right bottom
-        glColor3f(0, 1, 1)
-        circle.filled_circle(20, CAR_X + 90, CAR_Y + 30)
-        # left top
-        glColor3f(0, 1, 1)
-        circle.filled_circle(20, CAR_X - 10, CAR_Y + 120)
-        # right top
-        glColor3f(0, 1, 1)
-        circle.filled_circle(20, CAR_X + 90, CAR_Y + 120)
 
         glPointSize(1)
 
@@ -226,12 +199,73 @@ class Race:
 
         glColor3f(colors[2], colors[1], colors[0])
 
+        def transform():
+            a = math.cos(math.radians(45))
+            b = math.sin(math.radians(45))
+
+            r = np.array([[a, -b],
+                          [b, a]])
+
+            v1 = np.array([[CAR_X + 90],[CAR_Y -10]])
+            v2 = np.array([[CAR_X - 10],[CAR_Y -10]])
+            v3 = np.array([[CAR_X - 10],[CAR_Y + 160]])
+            v4 = np.array([[CAR_X + 90],[CAR_Y + 160]])
+
+            # rotation
+            v11 = np.matmul(r,v1)
+            v22 = np.matmul(r,v2)
+            v33 = np.matmul(r,v3)
+            v44 = np.matmul(r,v4)
+
+            glColor3f(0, 1, 0)
+            glBegin(GL_QUADS)
+            glVertex2f(v11[0][0], v11[1][0])
+            glVertex2f(v22[0][0], v22[1][0])
+            glVertex2f(v33[0][0], v33[1][0])
+            glVertex2f(v44[0][0], v44[1][0])
+            glEnd()
+            # left bottom
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, v11[0][0], v11[1][0])
+            # right bottom
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, v22[0][0], v22[1][0])
+            # left top
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, v33[0][0], v33[1][0])
+            # right top
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, v44[0][0], v44[1][0])
+
+        # Car Design
         if GAME_OVER:
             glColor3f(0, 0, 1)
             glColor3f(1, 0, 0)
             menu.game_over_text(-650, 0)
             pygame.mixer.music.pause()
             pygame.mixer.Sound.play(crash_sound)
+            transform()
+        else:
+            glBegin(GL_QUADS)
+            glColor3f(0, 1, 0)
+            glVertex2f(CAR_X + 90, CAR_Y -10)
+            glVertex2f(CAR_X - 10, CAR_Y -10)
+            glVertex2f(CAR_X - 10, CAR_Y + 160)
+            glVertex2f(CAR_X + 90, CAR_Y + 160)
+
+            glEnd()
+            # left bottom
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, CAR_X - 10, CAR_Y + 30)
+            # right bottom
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, CAR_X + 90, CAR_Y + 30)
+            # left top
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, CAR_X - 10, CAR_Y + 120)
+            # right top
+            glColor3f(0, 1, 1)
+            circle.filled_circle(20, CAR_X + 90, CAR_Y + 120)
 
         glutSwapBuffers()
         glutMainLoop()
@@ -248,9 +282,9 @@ class Race:
 
         for i in range(3):
             line.midpoint(left_x1 + offset + i, left_y1,
-                          left_x1 + offset + i , Y_MAX_GLOBAL)
+                          left_x1 + offset + i, Y_MAX_GLOBAL)
             line.midpoint(-left_x1 - offset - i, left_y1, -
-                          left_x1 - offset - i , Y_MAX_GLOBAL)
+            left_x1 - offset - i, Y_MAX_GLOBAL)
 
     def create_rock(self, rock):
         circle.midpoint_circle_algorithm(rock.radius, rock.x, rock.y)
